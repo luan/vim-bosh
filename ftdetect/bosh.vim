@@ -23,13 +23,13 @@ fun! s:SelectBosh()
   let boshKeyCount = system('cat ' . fp . ' | ' . grep . ' "' . boshRegex . '" | wc -l')
 
   if boshKeyCount =~# '6'
-    execute 'set filetype=bosh-deployment'
+    execute 'set filetype=bosh_deployment'
   endif
 
   let boshRegex = '^(azs|networks|resource_pools|vm_types|disk_pools|disk_types):'
   let boshKeyCount = system('cat ' . fp . ' | ' . grep . ' "' . boshRegex . '" | wc -l')
 
   if boshKeyCount =~# '4'
-    execute 'set filetype=bosh-cloud-config'
+    execute 'set filetype=bosh_cloud_config'
   endif
 endfun

@@ -57,7 +57,7 @@ let roots               = ['azs', 'vm_types', 'resource_pools', 'disk_types',
 
 let azOptions          = ['name', 'cloud_properties']
 let vmtypeOptions      = ['name', 'cloud_properties']
-let disktypeOptions    = ['name', 'cloud_properties']
+let disktypeOptions    = ['name', 'disk_size', 'cloud_properties']
 let networkOptions     = ['name', 'type', 'dns', 'static_ips', 'subnets', 'default', 'cloud_properties']
 let subnetOptions      = ['dns', 'az', 'azs', 'cloud_properties', 'gateway', 'range', 'reserved', 'static']
 let compilationOptions = ['workers', 'network', 'az', 'reuse_compilation_vms', 'vm_type']

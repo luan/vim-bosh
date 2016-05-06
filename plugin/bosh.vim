@@ -108,17 +108,17 @@ function! s:CheckBinaries()
 endfunction
 
 " boshtags generates ctags for the current buffer
-" function! s:boshtags()
-"     if &filetype != "bosh"
-"         return
-"     endif
+function! s:boshtags()
+    if &filetype != "bosh_cloud_config" && &filetype != "bosh_deployment"
+        return
+    endif
 
-"     let bin_path = bosh#CheckBinPath(g:bosh_boshtags_bin)
-"     if empty(bin_path)
-"         return
-"     endif
-"     call system(expand(bin_path) . " -f " . &tags . " " . expand("%:p"))
-" endfunction
+    let bin_path = bosh#CheckBinPath(g:bosh_boshtags_bin)
+    if empty(bin_path)
+        return
+    endif
+    call system(expand(bin_path) . " -f " . &tags . " -R " . getcwd())
+endfunction
 
 " Autocommands
 " ============================================================================
@@ -126,15 +126,84 @@ endfunction
 augroup vim-bosh
     autocmd!
 
-    " run gometalinter on save
-    " if get(g:, "bosh_tags_autosave", 1)
-    "     autocmd FileType bosh
-    "                 \ let b:tagspath = tempname() |
-    "                 \ exec 'setlocal tags='.b:tagspath |
-    "                 \ call s:boshtags()
-    "     autocmd BufWritePost *.yml call s:boshtags()
-    " endif
+    run gometalinter on save
+    if get(g:, "bosh_tags_autosave", 1)
+        autocmd FileType bosh_cloud_config
+                    \ let b:tagspath = tempname() |
+                    \ exec 'setlocal tags='.b:tagspath |
+                    \ call s:boshtags()
+        autocmd FileType bosh_deployment
+                    \ let b:tagspath = tempname() |
+                    \ exec 'setlocal tags='.b:tagspath |
+                    \ call s:boshtags()
+        autocmd BufWritePost *.yml call s:boshtags()
+    endif
 augroup END
 
+if !executable('ctags')
+    finish
+elseif globpath(&rtp, 'plugin/tagbar.vim') == ""
+    finish
+endif
+
+if !exists("g:bosh_boshtags_bin")
+    let g:bosh_boshtags_bin = "boshtags"
+endif
+
+function! s:SetTagbar()
+    let bin_path = bosh#CheckBinPath(g:bosh_boshtags_bin)
+    if empty(bin_path)
+        return
+    endif
+
+    if !exists("g:tagbar_type_bosh")
+        let g:tagbar_type_bosh = {
+            \ 'ctagstype' : 'bosh',
+            \ 'kinds'     : [
+                \ 'b:basic',
+                \ 'p:primitives',
+                \ 'v:vm_types',
+                \ 'd:disk_types',
+                \ 'n:networks',
+                \ 'a:azs',
+                \ 'c:compilation',
+                \ 'i:instance_groups',
+                \ 'j:jobs',
+                \ 'r:releases',
+                \ 's:stemcells',
+                \ 'u:update',
+           \ ],
+            \ 'sro' : '.',
+            \ 'kind2scope' : {
+                \ 'p' : 'ptype',
+                \ 'v' : 'vtype',
+                \ 'd' : 'dtype',
+                \ 'n' : 'ntype',
+                \ 'i' : 'itype',
+                \ 'j' : 'jtype',
+                \ 'a' : 'atype',
+                \ 'r' : 'rtype',
+                \ 's' : 'stype',
+            \ },
+            \ 'scope2kind' : {
+                \ 'ptype' : 'p',
+                \ 'vtype' : 'v',
+                \ 'dtype' : 'd',
+                \ 'ntype' : 'n',
+                \ 'itype' : 'i',
+                \ 'jtype' : 'j',
+                \ 'atype' : 'a',
+                \ 'rtype' : 'r',
+                \ 'stype' : 's',
+            \ },
+            \ 'ctagsbin'  : expand(bin_path),
+            \ 'ctagsargs' : '-sort -silent'
+        \ }
+    endif
+    let g:tagbar_type_bosh_cloud_config = g:tagbar_type_bosh
+    let g:tagbar_type_bosh_deployment = g:tagbar_type_bosh
+endfunction
+
+call s:SetTagbar()
 
 " vim:ts=4:sw=4:et
