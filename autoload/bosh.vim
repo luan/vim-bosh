@@ -75,7 +75,7 @@ function! bosh#CheckBinPath(binpath)
     " check if we have an appropriate bin_path
     let bosh_bin_path = bosh#BinPath()
     if empty(bosh_bin_path)
-        echo "vim-bosh: could not find '" . basename . "'. Run :boshInstallBinaries to fix it."
+        echo "vim-bosh: could not find '" . basename . "'. Run :BoshInstallBinaries to fix it."
         return ""
     endif
 
@@ -85,7 +85,7 @@ function! bosh#CheckBinPath(binpath)
     let $PATH = $PATH . bosh#PathListSep() . bosh_bin_path
 
     if !executable(basename)
-        echo "vim-bosh: could not find '" . basename . "'. Run :boshInstallBinaries to fix it."
+        echo "vim-bosh: could not find '" . basename . "'. Run :BoshInstallBinaries to fix it."
         " restore back!
         let $PATH = old_path
         return ""
