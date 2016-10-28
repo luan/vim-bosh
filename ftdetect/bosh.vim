@@ -19,10 +19,10 @@ fun! s:SelectBosh()
   endif
 
   let fp = expand("<afile>:p")
-  let boshRegex = '^(name|director_uuid|releases|stemcells|update|instance_groups):'
+  let boshRegex = '^(name|releases|stemcells|update|instance_groups):'
   let boshKeyCount = system('cat ' . fp . ' | ' . grep . ' "' . boshRegex . '" | wc -l')
 
-  if boshKeyCount =~# '6'
+  if boshKeyCount =~# '5'
     execute 'set filetype=bosh_deployment'
   endif
 
