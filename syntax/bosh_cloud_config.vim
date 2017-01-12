@@ -53,7 +53,7 @@ hi link yamlString String
 hi link yamlEscape Special
 
 let roots               = ['azs', 'vm_types', 'resource_pools', 'disk_types',
-                          \ 'diks_pools', 'compilation', 'networks']
+                          \ 'disk_pools', 'compilation', 'networks']
 
 let azOptions          = ['name', 'cloud_properties']
 let vmtypeOptions      = ['name', 'cloud_properties']
