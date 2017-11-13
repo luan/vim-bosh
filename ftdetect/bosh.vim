@@ -3,6 +3,9 @@
 " Author:   Luan Santos <vim@luan.sh>
 " URL:      https://github.com/luan/vim-bosh
 
+autocmd BufNewFile,BufRead monit set filetype=monitrc
+autocmd BufNewFile,BufRead spec set filetype=yaml
+
 autocmd BufNewFile,BufRead *.yml,*.yaml  call s:SelectBosh()
 
 fun! s:SelectBosh()
